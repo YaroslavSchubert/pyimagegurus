@@ -1,5 +1,5 @@
 #  Month 1
-1.1: Loading, displaying, and saving images
+***1.1: Loading, displaying, and saving images
 1.2: Image basics
 1.3: Drawing
 1.4: Basic image processing
@@ -31,14 +31,14 @@
 10.1: What are image descriptors, feature descriptors, and feature vectors?
 10.2: Color channel statistics
 10.3: Color histograms
-11.1: Measuring distance from camera to object in image
+11.1: Measuring distance from camera to object in image***
 #  Month 2
-4.1: A high level overview of image classification
+***4.1: A high level overview of image classification
 4.1.1: What is image classification?
 4.1.2: Types of learning
 4.2: The image classification pipeline
 4.3: k-Nearest Neighbor classification
-6.1: What is ANPR?
+6.1: What is ANPR?***
 9.1: Installing OpenCV on your Raspberry Pi
 10.4: Hu Moments
 10.5: Zernike Moments
