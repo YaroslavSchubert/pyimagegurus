@@ -13,4 +13,3 @@ cv2.imshow("Image", image)
 cv2.waitKey(0)
 
 # cv2.imwrite('data/new.jpg', image)
-
