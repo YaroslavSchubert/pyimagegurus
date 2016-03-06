@@ -40,9 +40,9 @@
 4.3: k-Nearest Neighbor classification
 6.1: What is ANPR?***
 9.1: Installing OpenCV on your Raspberry Pi
-***10.4: Hu Moments***
+***10.4: Hu Moments
 10.5: Zernike Moments
-10.6: Haralick texture
+10.6: Haralick texture***
 10.7: Local Binary Patterns
 10.8: Histogram of Oriented Gradients
 11.2: Face detection in images
