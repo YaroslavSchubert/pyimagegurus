@@ -1,1 +1,7 @@
 .idea/
+*.pyc
+projects/ImageSearchEngine[MONTH3][3.2][PROJ]/ukbench
+projects/ImageSearchEngine_32/ukbench/*
+/data/ukbench
+/data/ukbench.zip
+
