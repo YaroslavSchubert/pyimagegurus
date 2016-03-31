@@ -11,7 +11,7 @@ class Searcher(object):
         with open(self.db_path) as f:
             reader = csv.reader(f)
             for row in reader:
-                features = [float(x) for x in row[:1]]
+                features = [float(x) for x in row[1:]]
                 d = dists.chi2_distance(features, query_features)
                 results[row[0]] = d
 
