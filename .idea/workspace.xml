@@ -1,18 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c96a7181-8f63-4a80-85bc-cac75ec29088" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/projects/localize_license_plates_month3/__init__.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/projects/localize_license_plates_month3/descriptors/__init__.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/projects/localize_license_plates_month3/descriptors/blockbinarypixelsum.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/projects/localize_license_plates_month3/license_plate/__init__.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/projects/localize_license_plates_month3/license_plate/licenseplate.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/projects/localize_license_plates_month3/recognize.py" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/data/lplinux.tar.bz2" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.ipynb_checkpoints/MONTH_3_1-checkpoint.ipynb" afterPath="$PROJECT_DIR$/.ipynb_checkpoints/MONTH_3_1-checkpoint.ipynb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MONTH_3_1.ipynb" afterPath="$PROJECT_DIR$/MONTH_3_1.ipynb" />
-    </list>
+    <list default="true" id="c96a7181-8f63-4a80-85bc-cac75ec29088" name="Default" comment="" />
     <ignored path="pyimagegurus.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path=".idea/dataSources.local.xml" />
