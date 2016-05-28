@@ -22,13 +22,18 @@ for imagePath in sorted(list(paths.list_images(args["images"]))):
 
     # initialize the license plate detector and detect the license plates and charactors
     lpd = LicensePlateDetector(image)
-    plates = lpd.detect()
+    plates, coord = lpd.detect()
 
     # loop over the license plate regions and draw the bounding box surrounding the
     # license plate
-    for lpBox in plates:
+    for lpBox, c in zip(plates, coord):
+        x,y,w,h = c
+        roi = image[y:y + h, x:x + w]
+        # cv2.imshow(roi)
         cv2.drawContours(image, [lpBox], -1, (0, 255, 0), 2)
 
     # display the output image
-    cv2.imshow("image", image)
-    cv2.waitKey(0)
+    # cv2.imshow("image", image)
+    # cv2.waitKey(0)
+
+

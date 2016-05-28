@@ -15,6 +15,7 @@ class LicensePlateDetector(object):
         rectKernel = cv2.getStructuringElement(cv2.MORPH_RECT, (13, 5))
         squareKernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
         regions = []
+        coord = []
 
         gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
 
@@ -51,11 +52,12 @@ class LicensePlateDetector(object):
         (cnts, _) = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
         for c in cnts:
-            (w, h) = cv2.boundingRect(c)[2:]
+            (x, y, w, h) = cv2.boundingRect(c)[:]
             aspectRatio = w / float(h)
             rect = cv2.minAreaRect(c)
             box = np.int0(cv2.cv.BoxPoints(rect))
             if (aspectRatio > 3 and aspectRatio < 6) and h > self.minPlateH and w > self.minPlateW:
                 regions.append(box)
+                coord.append((x,y,w,h))
 
-        return regions
+        return regions, coord
