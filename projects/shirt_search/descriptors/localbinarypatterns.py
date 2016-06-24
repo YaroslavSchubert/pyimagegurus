@@ -17,11 +17,3 @@ class LocalBinaryPatterns(object):
 
 
 
-
-from concurrent.futures import ProcessPoolExecutor
-
-
-L = [1,2,3,4,5]
-
-with ProcessPoolExecutor(6) as executor:
-    results = executor.map(lambda x: x**3, L)
