@@ -7,3 +7,7 @@ projects/ImageSearchEngine_32/ukbench/*
 /data/ukbench.zip
 arch/
 data/
+/projects/6step_m35/output/vocab.cpickle
+/projects/6step_m35/output/features_quiz.hdf5
+/projects/6step_m35/output/features.hdf5
+/projects/6step_m35/output/vw_vis

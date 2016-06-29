@@ -1,6 +1,5 @@
 # import the necessary packages
 from __future__ import print_function
-# from pyimagesearch import ResultsMontage
 from sklearn.metrics import pairwise
 import numpy as np
 import progressbar
@@ -10,19 +9,18 @@ import h5py
 import cv2
 
 import warnings
-warnings.filterwarnings('ignore')
 
+from projects.ImageSearchEngine_32.cbir.resultsmontage import ResultsMontage  # TODO REFACTOR !
+
+warnings.filterwarnings('ignore')
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
 ap.add_argument("-d", "--dataset", required=True, help="Path to the directory of indexed images")
 ap.add_argument("-f", "--features-db", required=True, help="Path to the features database")
 ap.add_argument("-c", "--codebook", required=True, help="Path to the codebook")
-ap.add_argument("-o", "--output", required=True, help="Path to output directory")
+ap.add_argument("-o", '--output', required=True, help="Path to output directory")
 args = vars(ap.parse_args())
-
-# TODO REFACTOR !
-
 
 # load the codebook and open the features database
 vocab = cPickle.loads(open(args["codebook"]).read())
@@ -35,7 +33,7 @@ widgets = ["Comparing: ", progressbar.Percentage(), " ", progressbar.Bar(), " ",
 pbar = progressbar.ProgressBar(maxval=featuresDB["image_ids"].shape[0], widgets=widgets).start()
 
 # loop over the image IDs
-for (i, imageID) in enumerate(featuresDB["image_ids"]):
+for (i, imageID) in list(enumerate(featuresDB["image_ids"]))[:2000000]:
     # grab the rows for the features database and split them into keypoints and
     # feature vectors
     (start, end) = featuresDB["index"][i]
@@ -62,6 +60,8 @@ for (i, imageID) in enumerate(featuresDB["image_ids"]):
             vis[j] = topResults
 
     # update the progress bar
+
+
     pbar.update(i)
 
 # close the features database
@@ -69,27 +69,27 @@ pbar.finish()
 featuresDB.close()
 print("[INFO] writing visualizations to file...")
 
-
 # loop over the top results
-for (vwID, results) in vis.items():
-# initialize the results montage
+for (vwID, results) in vis.items()[:20000000]:
+    # initialize the results montage
     montage = ResultsMontage((64, 64), 4, 16)
 
 # loop over the results
-for (_, (x, y), imageID) in results:
-# load the current image
-    p = "{}/{}".format(args["dataset"], imageID)
-image = cv2.imread(p)
-(h, w) = image.shape[:2]
+    for (_, (x, y), imageID) in results:
+        # load the current image
+        p = "{}/{}".format(args["dataset"], imageID)
+        image = cv2.imread(p)
+        (h, w) = image.shape[:2]
 
-# extract a 64x64 region surrounding the keypoint
-(startX, endX) = (max(0, x - 32), min(w, x + 32))
-(startY, endY) = (max(0, y - 32), min(h, y + 32))
-roi = image[startY:endY, startX:endX]
+        # extract a 64x64 region surrounding the keypoint
+        (startX, endX) = (max(0, x - 32), min(w, x + 32))
+        (startY, endY) = (max(0, y - 32), min(h, y + 32))
+        roi = image[startY:endY, startX:endX]
 
-# add the ROI to the montage
-montage.addResult(roi)
+        # add the ROI to the montage
+        montage.addResult(roi)
 
-# write the visualization to file
-p = "{}/vis_{}.jpg".format(args["output"], vwID)
-cv2.imwrite(p, cv2.cvtColor(montage.montage, cv2.COLOR_BGR2GRAY))
+    # write the visualization to file
+    p = "{}/vis_{}.jpg".format(args["output"], vwID)
+    cv2.imwrite(p, cv2.cvtColor(montage.montage, cv2.COLOR_BGR2GRAY))
+    print('[INFO] writing montage of {}, to {}'.format(imageID, p))

@@ -1,0 +1,1 @@
+python index_features.py --dataset /home/i008/googledrive/Projects/pyimagegurus/data/ukbench_quiz  --features-db output/features_quiz.hdf5
