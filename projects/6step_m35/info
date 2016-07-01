@@ -1,1 +1,3 @@
-python index_features.py --dataset /home/i008/googledrive/Projects/pyimagegurus/data/ukbench_quiz  --features-db output/features_quiz.hdf5
+python index_features.py --dataset /home/i008/googledrive/Projects/pyimagegurus/data/ukbench --features-db output/features_quiz.hdf5
+python extract_bovw.py --features-db output/features.hdf5 --codebook output/vocab.cpickle --bovw-db output/bovw.hdf5 --idf output/idf.cpickle
+cluster_features.py --features-db output/features.hdf5 --codebook output/vocab.cpickle --clusters 1536 --percentage 0.25

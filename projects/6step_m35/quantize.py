@@ -12,7 +12,6 @@ np.random.seed(42)
 
 vocab = np.random.uniform(size=(3, 6))
 features = np.random.uniform(size=(10, 6))
-
 bvw = BagOfVisualWords(codebook=vocab, sparse=False)
 hist = bvw.describe(features)
 print(hist)

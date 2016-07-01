@@ -70,6 +70,7 @@ class BaseIndexer(object):
         shape[0] = newSize
 
         dataset.resize(tuple(shape))
+        print(newSize)
         self._debug("old size of {}: {:,}; new size: {:,}".format(dbName, origSize, newSize))
 
     def _debug(self, msg, msgType="[INFO]"):
