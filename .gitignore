@@ -11,3 +11,7 @@ data/
 /projects/6step_m35/output/features_quiz.hdf5
 /projects/6step_m35/output/features.hdf5
 /projects/6step_m35/output/vw_vis
+.ipynb_checkpoints/CaseStudies-checkpoint.ipynb
+.ipynb_checkpoints/month4-checkpoint.ipynb
+CaseStudies.ipynb
+projects/localize_license_plates_month3/license_plate/__pycache__/
