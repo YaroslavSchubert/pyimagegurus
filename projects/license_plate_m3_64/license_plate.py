@@ -167,3 +167,6 @@ class LicensePlateDetector:
         # license plate, and the character candidates
         return LicensePlate(success=True, plate=plate, thresh=thresh,
                             candidates=charCandidates)
+
+
+
