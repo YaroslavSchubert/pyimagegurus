@@ -61,3 +61,5 @@ class LicensePlateDetector(object):
                 coord.append((x,y,w,h))
 
         return regions, coord
+
+

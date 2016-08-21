@@ -169,4 +169,11 @@ class LicensePlateDetector:
                             candidates=charCandidates)
 
 
+    def pruneCandidateS(self):
+        pass
+
+
+
+
+
 

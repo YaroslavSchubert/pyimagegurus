@@ -22,3 +22,4 @@ class RootSIFT:
 
         # return a tuple of the keypoints and descriptors
         return (kps, descs)
+

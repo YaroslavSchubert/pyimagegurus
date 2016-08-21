@@ -33,7 +33,7 @@ def merge_notebooks(filenames):
 if __name__ == '__main__':
     notebooks = sys.argv[1:]
     if not notebooks:
-        print (__doc__, file=sys.stderr)
+        print(__doc__, file=sys.stderr)
         sys.exit(1)
         
     merge_notebooks(notebooks)
