@@ -1,0 +1,6 @@
+{
+  "image_dataset": "../data/caltech101/101_ObjectCategories/car_side",
+  "image_annotations": "../data/caltech101/Annotations/car_side",
+  //  "image_annotations": "/home/i008/googledrive/Projects/pyimagegurus/data/caltech101/Annotations/Motorbikes_16",
+  "image_distractions": "../data/sceneclass13"
+}
