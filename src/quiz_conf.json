@@ -2,19 +2,19 @@
 	#######
 	# DATASET PATHS
 	#######
-	"image_dataset": "../data/caltech101/101_ObjectCategories/car_side",
-	"image_annotations": "../data/caltech101/Annotations/car_side",
+	"image_dataset": "../data/caltech101/101_ObjectCategories/Motorbikes",
+	"image_annotations": "../data/caltech101/Annotations/Motorbikes_16",
 	"image_distractions": "../data/SceneClass13",
 
 	#######
 	# FEATURE EXTRACTION
 	#######
 	"features_path": "../output/cars/car_features.hdf5",
-	"percent_gt_images": 0.5,
+	"percent_gt_images": 0.75,
 	"offset": 5,
 	"use_flip": true,
-	"num_distraction_images": 500,
-	"num_distractions_per_image": 10,
+	"num_distraction_images": 1000,
+	"num_distractions_per_image": 20,
 
 	#######
 	# HISTOGRAM OF ORIENTED GRADIENTS DESCRIPTOR

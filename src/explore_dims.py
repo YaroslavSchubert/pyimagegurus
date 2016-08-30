@@ -10,7 +10,7 @@ import glob
 
 widths = []
 heights = []
-conf = Conf('object_detector_cars_conf.json')
+conf = Conf('quiz_conf.json')
 for p in glob.glob(conf['image_annotations'] + "/*.mat"):
     print(p)
     (y, h, x, w) = io.loadmat(p)['box_coord'][0]
