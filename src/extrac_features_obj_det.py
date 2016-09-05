@@ -14,7 +14,7 @@ import argparse
 import random
 import cv2
 
-conf = Conf('quiz_conf.json')
+conf = Conf('/home/i008/googledrive/Projects/pyimagegurus/src/object_detector_cars_conf.json')
 # load the configuration file
 
 
