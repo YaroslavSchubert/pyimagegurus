@@ -28,9 +28,9 @@
 	#######
 	"window_step": 4,
 	"overlap_thresh": 0.3,
-	"pyramid_scale": 1.2,
+	"pyramid_scale": 1.5,
 	"window_dim": [96, 32],
-	"min_probability": 0.8,
+	"min_probability": 0.7,
 
 	#######
 	# LINEAR SVM

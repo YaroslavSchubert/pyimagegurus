@@ -37,3 +37,5 @@ print("[INFO] dumping classifier...")
 f = open(conf["classifier_path"], "w")
 f.write(cPickle.dumps(model))
 f.close()
+
+

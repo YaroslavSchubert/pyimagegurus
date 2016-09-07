@@ -1,7 +1,9 @@
 # import the necessary packages
-from object_detection.objectdetector import ObjectDetector
-from descriptors.hog import HOG
+from src.object_detection.nms import non_max_suppression
+from src.object_detection.objectdetector import ObjectDetector
+from src.descriptors.hog import HOG
 from utils.conf import Conf
+import numpy as np
 import imutils
 import argparse
 import cPickle
@@ -15,14 +17,12 @@ args = vars(ap.parse_args())
 
 # load the configuration file
 conf = Conf(args["conf"])
+
 # load the classifier, then initialize the Histogram of Oriented Gradients descriptor
 # and the object detector
 model = cPickle.loads(open(conf["classifier_path"]).read())
-hog = HOG(orientations=conf["orientations"],
-          pixels_per_cell=tuple(conf["pixels_per_cell"]),
-          cells_per_block=tuple(conf["cells_per_block"]),
-          normalize=conf["normalize"])
-
+hog = HOG(orientations=conf["orientations"], pixels_per_cell=tuple(conf["pixels_per_cell"]),
+          cells_per_block=tuple(conf["cells_per_block"]), normalize=conf["normalize"])
 od = ObjectDetector(model, hog)
 
 # load the image and convert it to grayscale
@@ -30,16 +30,21 @@ image = cv2.imread(args["image"])
 image = imutils.resize(image, width=min(260, image.shape[1]))
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-# detect objects in the image
+# detect objects in the image and apply non-maxima suppression to the bounding boxes
 (boxes, probs) = od.detect(gray, conf["window_dim"], winStep=conf["window_step"],
                            pyramidScale=conf["pyramid_scale"], minProb=conf["min_probability"])
+pick = non_max_suppression(np.array(boxes), probs, conf["overlap_thresh"])
+orig = image.copy()
 
-# loop over the bounding boxes and draw them
+# loop over the original bounding boxes and draw them
 for (startX, startY, endX, endY) in boxes:
-    cv2.rectangle(image, (startX, startY), (endX, endY), (0, 0, 255), 2)
+    cv2.rectangle(orig, (startX, startY), (endX, endY), (0, 0, 255), 2)
+
+# loop over the allowed bounding boxes and draw them
+for (startX, startY, endX, endY) in pick:
+    cv2.rectangle(image, (startX, startY), (endX, endY), (0, 255, 0), 2)
 
 # show the output images
+cv2.imshow("Original", orig)
 cv2.imshow("Image", image)
 cv2.waitKey(0)
-
-# python test_model_no_nms_obj_det.py --conf object_detector_cars_conf.json --image ../data/caltech101/101_ObjectCategories/car_side/image_0017.jpg
