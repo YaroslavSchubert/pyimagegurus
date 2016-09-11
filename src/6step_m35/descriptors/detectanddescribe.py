@@ -80,11 +80,21 @@ class CreateFeatureDescriptor(object):
     def compute(self, image):
         self.descriptor.compute(image)
 
-    def describe(self, image):
+    def describe(self, image, useKpList=True):
         keypoints = self.detect(image)
         if not keypoints:
             return [], None
         _, descriptors = self.descriptor.compute(image, keypoints)
+
+        if len(keypoints) == 0:
+            return (None, None)
+
+        # check to see if the keypoints should be converted to a NumPy array
+        if useKpList:
+            keypoints = np.int0([kp.pt for kp in keypoints])
+
+        # return a tuple of the keypoints and descriptors
+
         return keypoints, descriptors
 
 

@@ -1,6 +1,6 @@
 # import the necessary packages
 from __future__ import print_function
-from descriptors.detectanddescribe import DetectAndDescribe
+from descriptors.detectanddescribe import DetectDescribe, CreateFeatureDetector, CreateFeatureDescriptor
 from descriptors.rootsift import RootSIFT
 from indexer.featureindexer import FeatureIndexer
 from imutils import paths
@@ -22,9 +22,9 @@ args = vars(ap.parse_args())
 
 # initialize the keypoint detector, local invariant descriptor, and the descriptor
 # pipeline
-detector = cv2.FeatureDetector_create("SURF")
-descriptor = RootSIFT()
-dad = DetectAndDescribe(detector, descriptor)
+# detector = cv2.FeatureDetector_create("SURF")
+# descriptor = RootSIFT()
+dad = DetectDescribe("SURF", "ROOTSIFT")
 
 # initialize the feature indexer
 fi = FeatureIndexer(args["features_db"], estNumImages=args["approx_images"],
@@ -42,7 +42,6 @@ for (i, imagePath) in enumerate(paths.list_images(args["dataset"])):
     image = cv2.imread(imagePath)
     image = imutils.resize(image, width=320)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
     # describe the image
     (kps, descs) = dad.describe(image)
 
@@ -51,6 +50,7 @@ for (i, imagePath) in enumerate(paths.list_images(args["dataset"])):
         continue
 
     # index the features
+
     fi.add(filename, kps, descs)
 
 # finish the indexing process
