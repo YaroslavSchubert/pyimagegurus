@@ -33,7 +33,8 @@ widgets = ["Comparing: ", progressbar.Percentage(), " ", progressbar.Bar(), " ",
 pbar = progressbar.ProgressBar(maxval=featuresDB["image_ids"].shape[0], widgets=widgets).start()
 
 # loop over the image IDs
-for (i, imageID) in list(enumerate(featuresDB["image_ids"]))[:2000000]:
+for (i, imageID) in list(enumerate(featuresDB["image_ids"]))[:20]:
+    print(i)
     # grab the rows for the features database and split them into keypoints and
     # feature vectors
     (start, end) = featuresDB["index"][i]
@@ -70,7 +71,7 @@ featuresDB.close()
 print("[INFO] writing visualizations to file...")
 
 # loop over the top results
-for (vwID, results) in vis.items()[:20000000]:
+for (vwID, results) in vis.items()[:20]:
     # initialize the results montage
     montage = ResultsMontage((64, 64), 4, 16)
 

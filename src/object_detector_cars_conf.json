@@ -36,6 +36,14 @@
 	# LINEAR SVM
 	#######
 	"classifier_path": "/home/i008/googledrive/Projects/pyimagegurus/src/model.cpickle",
-	"C": 0.01
+	"C": 0.01,
+
+    #######
+	# HARD NEGATIVE MINING
+	#######
+	"hn_num_distraction_images": 50,
+	"hn_window_step": 4,
+	"hn_pyramid_scale": 1.5,
+	"hn_min_probability": 0.51
 }
 

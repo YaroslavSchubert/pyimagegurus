@@ -47,6 +47,6 @@ featuresDB.close()
 bi.finish()
 
 # dump the inverse document frequency counts to file
-# f = open(args["idf"], "w")
-# f.write(cPickle.dumps(bi.df(method="idf")))
-# f.close()
+f = open(args["idf"], "w")
+f.write(cPickle.dumps(bi.df(method="idf")))
+f.close()
