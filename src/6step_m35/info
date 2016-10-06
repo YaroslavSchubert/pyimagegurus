@@ -1,3 +1,5 @@
 python index_features.py --dataset /home/i008/googledrive/Projects/pyimagegurus/data/ukbench --features-db output/features_quiz.hdf5
-cluster_features.py --features-db output/features.hdf5 --codebook output/vocab.cpickle --clusters 1536 --percentage 0.25
+python cluster_features.py --features-db output/features.hdf5 --codebook output/vocab.cpickle --clusters 1536 --percentage 0.25
 python extract_bovw.py --features-db output/features.hdf5 --codebook output/vocab.cpickle --bovw-db output/bovw.hdf5 --idf output/idf.cpickle
+python build_redis_index.py --bovw-db output/bovw.hdf5 --db 11
+python search.py --dataset ../../data/ukbench  --features-db output/features.hdf5 --bovw-db output/bovw.hdf5   --codebook output/vocab.cpickle --idf output/idf.cpickle --relevant ../../data/ukbench/relevant.json    --query ../../data/ukbench/ukbench00258.jpg --db 11

@@ -73,3 +73,12 @@ class BOVWIndexer(BaseIndexer):
         # database
         self.totalImages = self.bovwDB.shape[0]
         self.db.close()
+
+    def df(self, method=None):
+        if method == "idf":
+            # compute the inverted document frequency
+            return np.log(self.totalImages / (1.0 + self._df))
+
+        # otherwise, a valid method was supplied, so return the raw document
+        # frequency counts
+        return self._df
