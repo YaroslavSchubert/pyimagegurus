@@ -1,5 +1,20 @@
+# bovw search engine
 python index_features.py --dataset /home/i008/googledrive/Projects/pyimagegurus/data/ukbench --features-db output/features_quiz.hdf5
 python cluster_features.py --features-db output/features.hdf5 --codebook output/vocab.cpickle --clusters 1536 --percentage 0.25
 python extract_bovw.py --features-db output/features.hdf5 --codebook output/vocab.cpickle --bovw-db output/bovw.hdf5 --idf output/idf.cpickle
 python build_redis_index.py --bovw-db output/bovw.hdf5 --db 11
 python search.py --dataset ../../data/ukbench  --features-db output/features.hdf5 --bovw-db output/bovw.hdf5   --codebook output/vocab.cpickle --idf output/idf.cpickle --relevant ../../data/ukbench/relevant.json    --query ../../data/ukbench/ukbench00258.jpg --db 11
+
+#classification
+python index_features_classify.py --dataset /home/i008/googledrive/Projects/pyimagegurus/data/caltech5 --features-db output/features_caltech5_classify.hdf5 --approx-images 500
+python cluster_features.py --features-db output/features_caltech5_classify.hdf5 --codebook output/vocab_caltech5_classify.cpickle --clusters 512 --percentage 0.25
+python extract_bovw.py --features-db output/features_caltech5_classify.hdf5 --codebook output/vocab_caltech5_classify.cpickle --bovw-db output/bovw_caltech5_classify.hdf5
+python train_bovw_classifier.py --dataset ../../data/caltech5 --features-db output/features_caltech5_classify.hdf5 --bovw-db output/bovw_caltech5_classify.hdf5 --model output/model_bovw_classifier.cpickle
+
+
+
+# pbow classification
+python sample_dataset.py --input ../../data/caltech5 --output ../../data/caltech5sampled
+python index_features_pbow.py --dataset ../../data/caltech5sampled/training --features-db output/pbow_features_classify_training.hdf5
+python extract_pbow.py  --features-db output/pbow_features_classify_training.hdf5 --codebook output/vocab_caltech5_classify.cpickle --levels 2 --pbow-db output/training_pbow.hdf5
+

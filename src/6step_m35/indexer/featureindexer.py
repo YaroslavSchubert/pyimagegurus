@@ -1,35 +1,46 @@
+# import the necessary packages
 from baseindexer import BaseIndexer
 import numpy as np
 import h5py
 
 
 class FeatureIndexer(BaseIndexer):
-    def __init__(self, dbPath, estNumImages=500, maxBufferSize=50000, dbResizeFactor=2, verbose=True):
-        super(FeatureIndexer, self).__init__(
-            dbPath, estNumImages=estNumImages,
-            maxBufferSize=maxBufferSize,
-            dbResizeFactor=dbResizeFactor,
-            verbose=verbose
-        )
+    def __init__(self, dbPath, estNumImages=500, maxBufferSize=50000, dbResizeFactor=2,
+                 verbose=True):
+        # call the parent constructor
+        super(FeatureIndexer, self).__init__(dbPath, estNumImages=estNumImages,
+                                             maxBufferSize=maxBufferSize, dbResizeFactor=dbResizeFactor,
+                                             verbose=verbose)
 
-        self.db = h5py.File(self.dbPath, mode='w')
+        # open the HDF5 database for writing and initialize the datasets within
+        # the group
+        self.db = h5py.File(self.dbPath, mode="w")
         self.imageIDDB = None
+        self.imageDimsDB = None
         self.indexDB = None
         self.featuresDB = None
+
+        # initialize the image IDs buffer, image dimensions buffer, index buffer,
+        # and the keypoints + features buffer
         self.imageIDBuffer = []
+        self.imageDimsBuffer = []
         self.indexBuffer = []
         self.featuresBuffer = None
-        self.totalFeatures = 0
-        self.idxs = {'index': 0, 'features': 0}
 
-    def add(self, imageID, kps, features):
+        # initialize the total number of features in the buffer along with the
+        # indexes dictionary
+        self.totalFeatures = 0
+        self.idxs = {"index": 0, "features": 0}
+
+    def add(self, imageID, imageDim, kps, features):
         # compute the starting and ending index for the features lookup
         start = self.idxs["features"] + self.totalFeatures
         end = start + len(features)
 
-        # update the image IDs buffer, features buffer, and index buffer,
-        # followed by incrementing the feature count
+        # update the image IDs buffer, image dimensions buffer, features buffer,
+        # and index buffer, followed by incrementing the feature count
         self.imageIDBuffer.append(imageID)
+        self.imageDimsBuffer.append(imageDim)
         self.featuresBuffer = BaseIndexer.featureStack(np.hstack([kps, features]),
                                                        self.featuresBuffer)
         self.indexBuffer.append((start, end))
@@ -59,11 +70,34 @@ class FeatureIndexer(BaseIndexer):
         self._debug("creating datasets...")
         self.imageIDDB = self.db.create_dataset("image_ids", (self.estNumImages,),
                                                 maxshape=(None,), dtype=h5py.special_dtype(vlen=unicode))
+        self.imageDimsDB = self.db.create_dataset("image_dims", (self.estNumImages, 2),
+                                                  maxshape=(None, 2), dtype="int")
         self.indexDB = self.db.create_dataset("index", (self.estNumImages, 2),
                                               maxshape=(None, 2), dtype="int")
         self.featuresDB = self.db.create_dataset("features",
                                                  (approxFeatures, fvectorSize), maxshape=(None, fvectorSize),
                                                  dtype="float")
+
+    def _writeBuffers(self):
+        # write the buffers to disk
+        self._writeBuffer(self.imageIDDB, "image_ids", self.imageIDBuffer,
+                          "index")
+        self._writeBuffer(self.imageDimsDB, "image_dims", self.imageDimsBuffer,
+                          "index")
+        self._writeBuffer(self.indexDB, "index", self.indexBuffer, "index")
+        self._writeBuffer(self.featuresDB, "features", self.featuresBuffer,
+                          "features")
+
+        # increment the indexes
+        self.idxs["index"] += len(self.imageIDBuffer)
+        self.idxs["features"] += self.totalFeatures
+
+        # reset the buffers and feature counts
+        self.imageIDBuffer = []
+        self.imageDimsBuffer = []
+        self.indexBuffer = []
+        self.featuresBuffer = None
+        self.totalFeatures = 0
 
     def finish(self):
         # if the databases have not been initialized, then the original
@@ -79,6 +113,7 @@ class FeatureIndexer(BaseIndexer):
         # compact datasets
         self._debug("compacting datasets...")
         self._resizeDataset(self.imageIDDB, "image_ids", finished=self.idxs["index"])
+        self._resizeDataset(self.imageDimsDB, "image_dims", finished=self.idxs["index"])
         self._resizeDataset(self.indexDB, "index", finished=self.idxs["index"])
         self._resizeDataset(self.featuresDB, "features", finished=self.idxs["features"])
 

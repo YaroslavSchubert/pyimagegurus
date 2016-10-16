@@ -13,7 +13,7 @@ ap.add_argument("-c", "--codebook", required=True,
                 help="Path to the codebook")
 ap.add_argument("-b", "--bovw-db", required=True,
                 help="Path to where the bag-of-visual-words database will be stored")
-ap.add_argument("-d", "--idf", required=True,
+ap.add_argument("-d", "--idf", required=False,
                 help="Path to inverse document frequency counts will be stored")
 ap.add_argument("-s", "--max-buffer-size", type=int, default=500,
                 help="Maximum buffer size for # of features to be stored in memory")
@@ -47,6 +47,7 @@ featuresDB.close()
 bi.finish()
 
 # dump the inverse document frequency counts to file
-f = open(args["idf"], "w")
-f.write(cPickle.dumps(bi.df(method="idf")))
-f.close()
+if args["idf"]:
+    f = open(args["idf"], "w")
+    f.write(cPickle.dumps(bi.df(method="idf")))
+    f.close()

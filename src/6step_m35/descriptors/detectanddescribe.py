@@ -41,11 +41,16 @@ class CreateFeatureDetector(object):
             elif detector_name == 'SIFT':
                 self.detector = cv2.xfeatures2d.SIFT_create()
 
+            elif detector_name == 'GFTT':
+                self.detector = cv2.GFTTDetector_create()
             else:
                 raise ValueError('Unknown detector')
 
         else:
-            raise ValueError('CV version 2.X not supported')
+            if detector_name == 'GFTT':
+                self.detector = cv2.FeatureDetector_create("GFTT")
+            else:
+                raise ValueError('Descriptor not supported on this version of openCV')
 
     def detect(self, image):
         return self.detector.detect(image)
