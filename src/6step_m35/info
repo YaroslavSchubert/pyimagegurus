@@ -17,4 +17,4 @@ python train_bovw_classifier.py --dataset ../../data/caltech5 --features-db outp
 python sample_dataset.py --input ../../data/caltech5 --output ../../data/caltech5sampled
 python index_features_pbow.py --dataset ../../data/caltech5sampled/training --features-db output/pbow_features_classify_training.hdf5
 python extract_pbow.py  --features-db output/pbow_features_classify_training.hdf5 --codebook output/vocab_caltech5_classify.cpickle --levels 2 --pbow-db output/training_pbow.hdf5
-
+python train_pbow_classifier.py  --dataset ../../caltech5sampled/training  --features-db output/pbow_features_classify_training.hdf5  --pbow-db output/training_pbow.hdf5 --model output/pbow_classifier_trained_cpickle
