@@ -34,8 +34,11 @@ class LicensePlateDetector:
 
             # only continue if characters were successfully detected
             if lp.success:
-                # yield a tuple of the license plate object and bounding box
-                yield (lp, lpRegion)
+                # scissor the candidates into characters
+                chars = self.scissor(lp)
+
+                # yield a tuple of the license plate region and the characters
+                yield (lpRegion, chars)
 
     def detectPlates(self):
         # initialize the rectangular and square kernels to be applied to the image,
@@ -54,7 +57,7 @@ class LicensePlateDetector:
 
         # compute the Scharr gradient representation of the blackhat image in the x-direction,
         # and scale the resulting image into the range [0, 255]
-        gradX = cv2.Sobel(blackhat, ddepth=cv2.cv.CV_32F, dx=1, dy=0, ksize=-1)
+        gradX = cv2.Sobel(blackhat, ddepth=cv2.CV_32F, dx=1, dy=0, ksize=-1)
         gradX = np.absolute(gradX)
         (minVal, maxVal) = (np.min(gradX), np.max(gradX))
         gradX = (255 * ((gradX - minVal) / (maxVal - minVal))).astype("uint8")
@@ -76,7 +79,7 @@ class LicensePlateDetector:
         thresh = cv2.erode(thresh, None, iterations=1)
 
         # find contours in the thresholded image
-        (cnts, _) = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        cnts, _ = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
         # loop over the contours
         for c in cnts:
@@ -146,7 +149,7 @@ class LicensePlateDetector:
                 # the rules tests
                 keepAspectRatio = aspectRatio < 1.0
                 keepSolidity = solidity > 0.15
-                keepHeight = heightRatio > 0.4 and heightRatio < 0.95
+                keepHeight = 0.4 < heightRatio < 0.95
 
                 # check to see if the component passes all the tests
                 if keepAspectRatio and keepSolidity and keepHeight:
@@ -158,22 +161,78 @@ class LicensePlateDetector:
         # clear pixels that touch the borders of the character candidates mask and detect
         # contours in the candidates mask
         charCandidates = segmentation.clear_border(charCandidates)
+        (cnts, _) = cv2.findContours(charCandidates.copy(), cv2.RETR_EXTERNAL,
+                                     cv2.CHAIN_APPROX_SIMPLE)
+        cv2.imshow("Original Candidates", charCandidates)
 
-        # TODO:
-        # There will be times when we detect more than the desired number of characters --
-        # it would be wise to apply a method to 'prune' the unwanted characters
+        # if there are more character candidates than the supplied number, then prune
+        # the candidates
+        if len(cnts) > self.numChars:
+            (charCandidates, cnts) = self.pruneCandidates(charCandidates, cnts)
+            cv2.imshow("Pruned Canidates", charCandidates)
+
+        # take bitwise AND of the raw thresholded image and character candidates to get a more
+        # clean segmentation of the characters
+        thresh = cv2.bitwise_and(thresh, thresh, mask=charCandidates)
+        cv2.imshow("Char Threshold", thresh)
 
         # return the license plate region object containing the license plate, the thresholded
         # license plate, and the character candidates
         return LicensePlate(success=True, plate=plate, thresh=thresh,
                             candidates=charCandidates)
 
+    def pruneCandidates(self, charCandidates, cnts):
+        prunedCandidates = np.zeros(charCandidates.shape, dtype='uint8')
+        dims = []
 
-    def pruneCandidateS(self):
-        pass
+        for c in cnts:
+            (boxX, boxY, boxW, boxH) = cv2.boundingRect(c)
+            dims.append(boxY + boxH)
 
+        dims = np.array(dims)
+        diffs = []
+        selected = []
 
+        for i in xrange(0, len(dims)):
+            # compute the sum of differences between the current dimension and all other
+            # dimensions, then update the differences list
+            diffs.append(np.absolute(dims - dims[i]).sum())
 
+        for i in np.argsort(diffs)[:self.numChars]:
+            # draw the contour on the pruned candidates mask and add it to the list of selected
+            # contours
+            cv2.drawContours(prunedCandidates, [cnts[i]], -1, 255, -1)
+            selected.append(cnts[i])
 
+        return prunedCandidates, selected
 
+    def scissor(self, lp):
+        # detect contours in the candidates and initialize the list of bounding boxes and
+        # list of extracted characters
+        (cnts, _) = cv2.findContours(lp.candidates.copy(), cv2.RETR_EXTERNAL,
+                                     cv2.CHAIN_APPROX_SIMPLE)
+        boxes = []
+        chars = []
 
+        # loop over the contours
+        for c in cnts:
+            # compute the bounding box for the contour while maintaining the minimum width
+            (boxX, boxY, boxW, boxH) = cv2.boundingRect(c)
+            dX = min(self.minCharW, self.minCharW - boxW) / 2
+            boxX -= dX
+            boxW += (dX * 2)
+
+            # update the list of bounding boxes
+            boxes.append((boxX, boxY, boxX + boxW, boxY + boxH))
+
+        # sort the bounding boxes from left to right
+        boxes = sorted(boxes, key=lambda b: b[0])
+
+        # loop over the started bounding boxes
+        for (startX, startY, endX, endY) in boxes:
+            # extract the ROI from the thresholded license plate and update the characters
+            # list
+            chars.append(lp.thresh[startY:endY, startX:endX])
+
+        # return the list of characters
+        return chars
