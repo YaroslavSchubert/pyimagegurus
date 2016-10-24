@@ -236,3 +236,15 @@ class LicensePlateDetector:
 
         # return the list of characters
         return chars
+
+
+    @staticmethod
+    def preprocessChar(char):
+        # find the largest contour in the character, grab its bounding box, and crop it
+        (cnts, _) = cv2.findContours(char.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        c = max(cnts, key=cv2.contourArea)
+        (x, y, w, h) = cv2.boundingRect(c)
+        char = char[y:y + h, x:x + w]
+
+        # return the processed character
+        return char
