@@ -34,3 +34,5 @@ for (i, path) in enumerate(imagePaths):
 pbar.finish()
 f.close()
 
+
+import keras

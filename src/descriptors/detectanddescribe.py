@@ -1,14 +1,19 @@
+# -*- coding: utf-8 -*-
+
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-cv2.ocl.setUseOpenCL(False)
+# cv2.ocl.setUseOpenCL(False)
 
 
 class RootSIFT:
     def __init__(self):
         # initialize the SIFT feature extractor
-        self.extractor = cv2.xfeatures2d.SIFT_create()
+        if cv2.__version__.startswith('3'):
+            self.extractor = cv2.xfeatures2d.SIFT_create()
+        else:
+            self.extractor = cv2.DescriptorExtractor_create("SIFT")
 
     def compute(self, image, kps, eps=1e-7):
         # compute SIFT descriptors
@@ -51,7 +56,10 @@ class CreateFeatureDetector(object):
                 raise ValueError('Unknown detector')
 
         else:
-            raise ValueError('CV version 2.X not supported')
+            if detector_name == "SURF":
+                self.detector = cv2.FeatureDetector_create("SURF")
+            else:
+                raise ValueError('CV version 2.X not supported')
 
     def detect(self, image):
         return self.detector.detect(image)
@@ -77,7 +85,6 @@ class CreateFeatureDescriptor(object):
             elif descriptor_name == 'BINARY_BRIEF':
                 self.descriptor = cv2.xfeatures2d.BriefDescriptorExtractor_create()
 
-
             elif descriptor_name == 'BINARY_ORB':
                 self.descriptor = cv2.ORB_create()
 
@@ -88,23 +95,30 @@ class CreateFeatureDescriptor(object):
                 raise NotImplementedError
 
         else:
-            raise ValueError('CV version 2.X not supported')
+            if descriptor_name == "ROOTSIFT":
+                self.descriptor = RootSIFT()
+
+            else:
+                raise ValueError('no support for this descriptor in CV2')
 
         self.descriptor_name = descriptor_name
 
     def compute(self, image):
-        self.descriptor.compute(image)
+        return self.descriptor.compute(image)
 
     def describe(self, image):
         keypoints = self.detect(image)
         if not keypoints:
             return [], None
         _, descriptors = self.descriptor.compute(image, keypoints)
+        if self.use_kp_list:
+                keypoints = np.int0([kp.pt for kp in keypoints])
         return keypoints, descriptors
 
 
 class DetectDescribe(CreateFeatureDetector, CreateFeatureDescriptor):
-    def __init__(self, detector_name, descriptor_name):
+    def __init__(self, detector_name, descriptor_name, use_kp_list=True):
+        self.use_kp_list = True
         CreateFeatureDetector.__init__(self, detector_name=detector_name)
         CreateFeatureDescriptor.__init__(self, descriptor_name=descriptor_name)
 
