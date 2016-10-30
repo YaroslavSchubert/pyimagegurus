@@ -41,10 +41,6 @@ class SpatialVerifier:
             # determine matched inlier keypoints and grab the indexes of the
             # matched keypoints into the bag-of-visual-words
             bovwIdxs = self.match(queryKps, queryDescs.astype("float32"), kps, descs.astype("float32"))
-            if bovwIdxs is not None:
-                print(len(bovwIdxs))
-            else:
-                print(0)
             # provided that at least some keypoints were matched, the final score
             # for the spatial verification is the sum of the idf values for the
             # inlier words
@@ -108,3 +104,6 @@ class SpatialVerifier:
     def finish(self):
         # close the features database
         self.featuresDB.close()
+
+
+

@@ -11,23 +11,20 @@
 
 # import the necessary packages
 from __future__ import print_function
-from src.descriptors.detectanddescribe import DetectDescribe
-from src.descriptors.rootsift import RootSIFT
-from src.six_step_m35.ir.searcher import SearchResult, Searcher
-# from descriptors import RootSIFT
-from ir.bovw import BagOfVisualWords
-from ir.searcher import Searcher
-from ir import dists
-from src.ImageSearchEngine_32.cbir.resultsmontage import ResultsMontage
-from scipy.spatial import distance
-from redis import Redis
+
 import argparse
 import cPickle
-import imutils
 import json
-import cv2
 
-# construct the argument parser and parse the arguments
+import cv2
+import imutils
+from redis import Redis
+from scipy.spatial import distance
+
+from ir.bovw import BagOfVisualWords
+from ir.searcher import Searcher
+from src.ImageSearchEngine_32.cbir.resultsmontage import ResultsMontage
+from src.descriptors.detectanddescribe import DetectDescribe
 from src.six_step_m35.ir.spatialverifier import SpatialVerifier
 
 ap = argparse.ArgumentParser()
@@ -77,7 +74,7 @@ print("[INFO] search took: {:.2f}s".format(sr.search_time))
 
 # spatially verify the results
 spatialVerifier = SpatialVerifier(args["features_db"], idf, vocab)
-sv, m = spatialVerifier.rerank(queryKps, queryDescs, sr, numResults=20)
+sv = spatialVerifier.rerank(queryKps, queryDescs, sr, numResults=20)
 print("[INFO] spatial verification took: {:.2f}s".format(sv.search_time))
 
 montage = ResultsMontage((240, 320), 5, 20)

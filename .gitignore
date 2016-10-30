@@ -13,3 +13,5 @@ CaseStudies.ipynb
 /src/localize_license_plates_month3/license_plate/__pycache__/
 *.jpg
 *.png
+*.cpickle
+*.hdf5

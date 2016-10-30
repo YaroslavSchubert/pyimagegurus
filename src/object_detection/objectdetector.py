@@ -16,7 +16,7 @@ class ObjectDetector(object):
                 (winH, winW) = window.shape[:2]
                 if winH == winDim[1] and winW == winDim[0]:
                     features = self.desc.describe(window).reshape(1, -1)
-                    prob = self.model.predict_proba(features)[0][1]
+                    prob = self.model.predict_probab(features)[0][1]
 
                     if prob > minProb:
                         (startX, startY) = (int(scale * x), int(scale * y))
@@ -24,5 +24,6 @@ class ObjectDetector(object):
                         endY = int(startY + (scale + winH))
                         boxes.append((startX, startY, endX, endY))
                         probs.append(prob)
-
         return (boxes, probs)
+
+

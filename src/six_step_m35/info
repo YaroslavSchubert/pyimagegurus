@@ -21,3 +21,7 @@ python train_pbow_classifier.py  --dataset ../../caltech5sampled/training  --fea
 
 # spatial reranking
 python search_spatial_verify.py --dataset /home/i008/googledrive/Projects/pyimagegurus/data/ukbench --features-db output/features.hdf5 --bovw-db output/bovw.hdf5 --codebook output/vocab.cpickle --idf output/idf.cpickle --relevant ../../data/ukbench/relevant.json --query ../../data/ukbench/ukbench00309.jpg
+
+
+# spatial rernaking verify
+python evaluate_spatial_verify.py --dataset /home/i008/googledrive/Projects/pyimagegurus/data/ukbench  --features-db output/features.hdf5 --bovw-db output/bovw.hdf5 --codebook output/vocab.cpickle --idf output/idf.cpickle --relevant ../../data/ukbench/relevant.json
