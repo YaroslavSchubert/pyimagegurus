@@ -118,9 +118,9 @@ class CreateFeatureDescriptor(object):
 
 class DetectDescribe(CreateFeatureDetector, CreateFeatureDescriptor):
     def __init__(self, detector_name, descriptor_name, use_kp_list=True):
-        self.use_kp_list = True
         CreateFeatureDetector.__init__(self, detector_name=detector_name)
         CreateFeatureDescriptor.__init__(self, descriptor_name=descriptor_name)
+        self.use_kp_list = True
 
     def visualize_matches(self, image1, image2, matcher='brute', distance_threshold=0.8):
         kps_1, feat_1 = self.describe(image1)
