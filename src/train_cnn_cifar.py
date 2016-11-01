@@ -59,5 +59,9 @@ print("[INFO] accuracy: {:.2f}%".format(accuracy * 100))
 
 # dump the network architecture and weights to file
 print("[INFO] dumping architecture and weights to file...")
-model.save_weights(args["model"])
 
+model_json = model.to_json()
+with open(args['model'] + '.json', "w") as json_file:
+    json_file.write(model_json)
+
+model.save_weights(args["model"])
